@@ -135,7 +135,7 @@ static u32 select_best_child(afl_state_t * afl)
   child = afl->tree_tmp->first_child;
   while(child)
   {
-    child->UCT = (child->q - Q_min)/(Q_max - Q_min) + 1.414* sqrt(log((double)(tree_tmp->N)) / ((double)(afl->child->N)));
+    child->UCT = (child->q - Q_min)/(Q_max - Q_min) + 1.414* sqrt(log((double)(afl->tree_tmp->N)) / ((double)(child->N)));
     if(child->UCT > UCT_max)
     {
       flag = 1;
