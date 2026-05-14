@@ -2472,9 +2472,33 @@ int main(int argc, char **argv_orig, char **envp) {
   OKF("Writing mutation introspection to '%s'", ifn);
   #endif
 
+  u64 start_ms = get_cur_time();
+  back_propagation(afl);
+  u64 end_ms = get_cur_time();
+  afl->alphuzzpp_time_used += (end_ms - start_ms);
+
+  afl->queue_cycle = 0;
+
   while (likely(!afl->stop_soon)) {
 
-    cull_queue(afl);
+
+    u64 start_ms = get_cur_time();
+    select_treenode(afl);
+    u64 end_ms = get_cur_time();
+    afl->alphuzzpp_time_used += (end_ms - start_ms);
+    afl->alphuzzpp_log_cnt++;
+
+    afl->tree_cur = afl->tree_tmp;
+    afl->queue_cur = afl->tree_cur->treefile;
+    char * str = strstr(afl->queue_cur->fname,"id");
+    afl->current_entry = 0;
+
+    for(int i=3;i<9;i++)
+    {
+      afl->current_entry = afl->current_entry*10+(str[i]-48);
+    }
+
+    //cull_queue(afl);
 
     if (unlikely((!afl->old_seed_selection &&
                   runs_in_current_cycle > afl->queued_items) ||
@@ -2732,7 +2756,12 @@ int main(int argc, char **argv_orig, char **envp) {
       skipped_fuzz = fuzz_one(afl);
       //edit,delete
       afl->queue_cur->was_fuzzed = 1;
+      
+      u64 start_ms = get_cur_time();
       back_propagation(afl);
+      u64 end_ms = get_cur_time();
+      afl->alphuzzpp_time_used += (end_ms - start_ms);
+      afl->alphuzzpp_log_cnt++;
 
       if (unlikely(!afl->stop_soon && exit_1)) { afl->stop_soon = 2; }
 

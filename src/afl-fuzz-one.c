@@ -2081,7 +2081,7 @@ havoc_stage:
     snprintf(afl->stage_name_buf, STAGE_BUF_SIZE, "splice %u", splice_cycle);
     afl->stage_name = afl->stage_name_buf;
     afl->stage_short = "splice";
-    afl->stage_max = (SPLICE_HAVOC * perf_score / afl->havoc_div) >> 8;
+    afl->stage_max = SPLICE_HAVOC * perf_score / afl->havoc_div / afl->tree_cur->min / afl->tree_cur->N / 100;
 
   }
 
@@ -3088,7 +3088,7 @@ abandon_entry:
 
     --afl->pending_not_fuzzed;
     afl->queue_cur->was_fuzzed = 1;
-    afl->reinit_table = 1;
+    // afl->reinit_table = 1;
     if (afl->queue_cur->favored) { --afl->pending_favored; }
 
   }

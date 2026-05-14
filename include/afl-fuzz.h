@@ -720,6 +720,11 @@ typedef struct afl_state {
   double last_bitmap_cvg, last_stability, last_eps;
   u64    stats_file_update_freq_msecs;  /* Stats update frequency (msecs)   */
 
+  /* alphuzzpp stats */
+  u64 alphuzzpp_log_cnt;      /* alphuzzpp 调用次数 */
+  u64 alphuzzpp_time_used;    /* alphuzzpp 累计耗时(ms) */
+  u64 plot_prev_alphuzzpp_lc; /* alphuzzpp_log_cnt 上次值 */
+
   /* plot file saves from last run */
   u32 plot_prev_qp, plot_prev_pf, plot_prev_pnf, plot_prev_ce, plot_prev_md;
   u64 plot_prev_qc, plot_prev_uc, plot_prev_uh, plot_prev_ed;

@@ -588,6 +588,7 @@ void add_to_queue(afl_state_t *afl, u8 *fname, u32 len, u8 passed_det) {
 
   afl->cycles_wo_finds = 0;
 
+  u64 start_ms = get_cur_time();
   /*MCTS add to tree*/
   TreeNode * tree = ck_alloc(sizeof(TreeNode));
   tree->treefile = q;
@@ -633,6 +634,8 @@ void add_to_queue(afl_state_t *afl, u8 *fname, u32 len, u8 passed_det) {
     //fflush(stdout);
   }
   afl->child_cur = tree;
+  u64 end_ms = get_cur_time();
+  afl->alphuzzpp_time_used += (end_ms - start_ms);
 
   struct queue_entry **queue_buf = (struct queue_entry **)afl_realloc(
       AFL_BUF_PARAM(queue), afl->queued_items * sizeof(struct queue_entry *));
